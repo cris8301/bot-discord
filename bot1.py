@@ -1,0 +1,24 @@
+import discord
+
+class MyClient(discord.Client):
+    # Suppress error on the User attribute being None since it fills up later
+    user: discord.ClientUser
+
+    async def on_ready(self):
+        print(f'Logged in as {self.user} (ID: {self.user.id})')
+        print('------')
+
+    async def on_member_join(self, member):
+        guild = member.guild
+        if guild.system_channel is not None:
+            to_send = f'Bienvenido {member.mention} a {guild.name}!'
+            await guild.system_channel.send(to_send)
+
+
+intents = discord.Intents.default()
+intents.members = True
+
+client = MyClient(intents=intents)
+
+
+client.run("aqui_va_tu_token")
