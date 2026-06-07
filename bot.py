@@ -2,6 +2,8 @@ import discord
 import random
 import asyncio
 import os
+import aiohttp
+
 from discord.ext import commands
 
 intents = discord.Intents.default()
@@ -57,8 +59,18 @@ async def imagen(ctx, nombre: str = None):
     await ctx.send(file=file, embed=embed)
 
 @bot.command()
+async def pato(ctx):
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://random-d.uk/api/random") as res:
+            data = await res.json()
+            imagen_url = data["url"]
+    embed = discord.Embed(title="🦆 Pato aleatorio", color=discord.Color.yellow())
+    embed.set_image(url=imagen_url)
+    await ctx.send(embed=embed)
+
+@bot.command()
 async def _help(ctx):
-    await ctx.send('Comandos disponibles:\n$_help - Muestra este mensaje\n$hello - Saluda al bot\n$heh [count_heh] - Repite "he" un número de veces (por defecto 5)\n$coin_flip - Lanza una moneda')
+    await ctx.send('Comandos disponibles:\n$_help - Muestra este mensaje\n$hello - Saluda al bot\n$heh [count_heh] - Repite "he" un número de veces (por defecto 5)\n$coin_flip - Lanza una moneda\n$pato - Muestra un pato aleatorio\n$imagen - Lista las imágenes disponibles\n$imagen [nombre] - Muestra la imagen seleccionada')
 
 
 @bot.command()
